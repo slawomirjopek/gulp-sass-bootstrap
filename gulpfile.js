@@ -7,6 +7,7 @@ var mainBowerFiles = require('main-bower-files');
 var filter = require('gulp-filter');
 var concat = require('gulp-concat');
 var csso = require('gulp-csso');
+var debug = require('gulp-debug');
 
 var CONFIG = {
     srcName: 'src',
@@ -57,7 +58,7 @@ gulp.task('vendors', function() {
 
 gulp.task('build', ['clean', 'vendors', 'styles'], function() {
     var files = gulp.src([
-        CONFIG.distStyleDir + 'vendors.css',
+        CONFIG.distStyleDir + 'vendor.css',
         CONFIG.distStyleDir + 'main.css'
     ]);
 
