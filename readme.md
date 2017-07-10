@@ -1,6 +1,6 @@
 install:
-npm install
-bower install
+- npm install
+- bower install
 
 html, styles init:
-gulp html
+- gulp html
