@@ -3,26 +3,38 @@ var sass = require('gulp-sass');
 var inject = require('gulp-inject');
 var wiredep = require('wiredep');
 var del = require('del');
-var mainBowerFiles = require('main-bower-files');
+var bowerFiles = require('main-bower-files');
 var filter = require('gulp-filter');
 var concat = require('gulp-concat');
 var csso = require('gulp-csso');
+var minify = require('gulp-minify');
 var debug = require('gulp-debug');
 
 var CONFIG = {
-    srcName: 'src',
-    distName: 'dist',
-    srcStyleDir: 'src/styles/',
-    distStyleDir: 'dist/styles/'
+    src: {
+        name: 'src',
+        styleDir: 'src/styles/',
+        scriptDir: 'src/scripts/'
+    },
+    dist: {
+        name: 'dist',
+        styleDir: 'dist/styles/',
+        scriptDir: 'dist/scripts/'
+    }
 };
 
 gulp.task('clean', function() {
-    del(CONFIG.distName);
+    del(CONFIG.dist.name);
 });
 
-gulp.task('styles', function() {
-    var appStyles = gulp.src(CONFIG.srcStyleDir + '*.scss', {read: false});
-    var globalStyles = gulp.src(CONFIG.srcStyleDir + 'global/*.scss', {read: false});
+gulp.task('watch', function () {
+    gulp.watch(CONFIG.src.scriptDir + '**/*.js', ['scripts']);
+    gulp.watch(CONFIG.src.styleDir + '**/*.scss', ['styles']);
+});
+
+gulp.task('styles', ['vendors-css'], function() {
+    var appStyles = gulp.src(CONFIG.src.styleDir + '*.scss', {read: false});
+    var globalStyles = gulp.src(CONFIG.src.styleDir + 'global/*.scss', {read: false});
 
     var injectOptions = {
         global: {
@@ -39,37 +51,66 @@ gulp.task('styles', function() {
         }
     };
 
-    return gulp.src('src/main.scss')
+    return gulp.src(CONFIG.src.name + '/main.scss')
         .pipe(wiredep.stream())
         .pipe(inject(globalStyles, injectOptions.global))
         .pipe(inject(appStyles, injectOptions.app))
         .pipe(sass())
         .pipe(csso())
-        .pipe(gulp.dest(CONFIG.distStyleDir))
+        .pipe(gulp.dest(CONFIG.dist.styleDir))
 });
 
-gulp.task('vendors', function() {
-    return gulp.src(mainBowerFiles())
+gulp.task('scripts', ['vendors-js'], function() {
+    var appScripts = gulp.src(CONFIG.src.scriptDir + '*.js');
+
+    return appScripts
+        .pipe(concat('app.js'))
+        .pipe(minify({
+            ext: {
+                min:'.js'
+            },
+            noSource: true
+        }))
+        .pipe(gulp.dest(CONFIG.dist.scriptDir))
+});
+
+gulp.task('vendors-css', function() {
+    return gulp.src(bowerFiles())
         .pipe(filter('**/*.css'))
         .pipe(concat('vendor.css'))
         .pipe(csso())
-        .pipe(gulp.dest(CONFIG.distStyleDir))
+        .pipe(gulp.dest(CONFIG.dist.styleDir))
 });
 
-gulp.task('build', ['clean', 'vendors', 'styles'], function() {
+gulp.task('vendors-js', function() {
+    return gulp.src(bowerFiles())
+        .pipe(filter('**/*.js'))
+        .pipe(concat('vendor.js'))
+        .pipe(minify({
+            ext: {
+                min:'.js'
+            },
+            noSource: true
+        }))
+        .pipe(gulp.dest(CONFIG.dist.scriptDir))
+});
+
+gulp.task('build', ['clean', 'styles', 'scripts'], function() {
     var files = gulp.src([
-        CONFIG.distStyleDir + 'vendor.css',
-        CONFIG.distStyleDir + 'main.css'
+        CONFIG.dist.scriptDir + 'vendor.js',
+        CONFIG.dist.scriptDir + 'app.js',
+        CONFIG.dist.styleDir + 'vendor.css',
+        CONFIG.dist.styleDir + 'main.css'
     ]);
 
     var injectOptions = {
         addRootSlash: false,
-        ignorePath: [CONFIG.srcName, CONFIG.distName]
+        ignorePath: [CONFIG.src.name, CONFIG.dist.name]
     };
 
-    return gulp.src(CONFIG.srcName + '/index.html')
+    return gulp.src(CONFIG.src.name + '/index.html')
         .pipe(inject(files, injectOptions))
-        .pipe(gulp.dest(CONFIG.distName))
+        .pipe(gulp.dest(CONFIG.dist.name))
 });
 
 function createImport(path) {

@@ -6,5 +6,8 @@
 **build:**
 - gulp build
 
+**watch:**
+- gulp watch
+
 **bootstrap customize:**
 _src/styles/global/*.scss_
