@@ -12,8 +12,12 @@
   "devDependencies": {
     "del": "^3.0.0",
     "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-csso": "^3.0.0",
+    "gulp-filter": "^5.0.0",
     "gulp-inject": "^4.2.0",
     "gulp-sass": "^3.1.0",
+    "main-bower-files": "^2.13.1",
     "wiredep": "^4.0.0"
   }
 }

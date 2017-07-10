@@ -3,7 +3,7 @@
   "authors": [
     "Sławomir Jopek <sjopek86@gmail.com>"
   ],
-  "license": "MInpm install ",
+  "license": "MIT",
   "homepage": "http://bluewolf.pl",
   "ignore": [
     "**/.*",
