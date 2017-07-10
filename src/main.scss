@@ -1,0 +1,11 @@
+// bower:scss
+// endbower
+
+@import 'styles/color';
+@import 'styles/font';
+@import 'styles/mixin';
+
+body {
+  background-color: $primary-color;
+  color: $secondary-color;
+}

@@ -1,5 +1,5 @@
 {
-  "name": "7ninjas task",
+  "name": "test site",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,5 +8,11 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-inject": "^4.2.0",
+    "gulp-sass": "^3.1.0",
+    "wiredep": "^4.0.0"
+  }
 }
