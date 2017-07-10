@@ -20,17 +20,21 @@ gulp.task('html', ['styles'], function() {
 gulp.task('styles', function() {
     var injectGlobalStyles = gulp.src('src/styles/global/*.scss');
 
-    var options = {
+    var injectOptions = {
         transform: createImport,
         starttag: '// inject:global',
         endtag: '// endinject',
         addRootSlash: false
     };
 
+    var sassCompileOptions = {
+        outputStyle: 'compressed'
+    };
+
     return gulp.src('src/main.scss')
         .pipe(wiredep.stream())
-        .pipe(inject(injectGlobalStyles, options))
-        .pipe(sass())
+        .pipe(inject(injectGlobalStyles, injectOptions))
+        .pipe(sass(sassCompileOptions))
         .pipe(gulp.dest('dist'))
 });
 
