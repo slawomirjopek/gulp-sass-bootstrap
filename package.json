@@ -18,6 +18,7 @@
     "gulp-inject": "^4.2.0",
     "gulp-minify": "^1.0.0",
     "gulp-sass": "^3.1.0",
+    "gulp-sequence": "^0.4.6",
     "main-bower-files": "^2.13.1",
     "wiredep": "^4.0.0"
   }

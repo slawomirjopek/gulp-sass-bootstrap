@@ -8,6 +8,7 @@ var filter = require('gulp-filter');
 var concat = require('gulp-concat');
 var csso = require('gulp-csso');
 var minify = require('gulp-minify');
+var gulpSequence = require('gulp-sequence')
 var debug = require('gulp-debug');
 
 var CONFIG = {
@@ -29,7 +30,8 @@ gulp.task('clean', function() {
 
 gulp.task('watch', function () {
     gulp.watch(CONFIG.src.scriptDir + '**/*.js', ['scripts']);
-    gulp.watch(CONFIG.src.styleDir + '**/*.scss', ['styles']);
+    gulp.watch(CONFIG.src.styleDir + '**/**/*.scss', ['styles']);
+    gulp.watch(CONFIG.src.name + '**/*.html', ['html']);
 });
 
 gulp.task('styles', ['vendors-css'], function() {
@@ -95,7 +97,7 @@ gulp.task('vendors-js', function() {
         .pipe(gulp.dest(CONFIG.dist.scriptDir))
 });
 
-gulp.task('build', ['clean', 'styles', 'scripts'], function() {
+gulp.task('html', function() {
     var files = gulp.src([
         CONFIG.dist.scriptDir + 'vendor.js',
         CONFIG.dist.scriptDir + 'app.js',
@@ -112,6 +114,8 @@ gulp.task('build', ['clean', 'styles', 'scripts'], function() {
         .pipe(inject(files, injectOptions))
         .pipe(gulp.dest(CONFIG.dist.name))
 });
+
+gulp.task('build', gulpSequence('clean', ['styles', 'scripts'], 'html'));
 
 function createImport(path) {
     return '@import "' + path + '";';
