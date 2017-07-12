@@ -8,7 +8,7 @@ var filter = require('gulp-filter');
 var concat = require('gulp-concat');
 var csso = require('gulp-csso');
 var minify = require('gulp-minify');
-var gulpSequence = require('gulp-sequence')
+var gulpSequence = require('gulp-sequence');
 var debug = require('gulp-debug');
 
 var CONFIG = {
