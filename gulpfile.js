@@ -9,18 +9,21 @@ var concat = require('gulp-concat');
 var csso = require('gulp-csso');
 var minify = require('gulp-minify');
 var gulpSequence = require('gulp-sequence');
+var imagemin = require('gulp-imagemin');
 var debug = require('gulp-debug');
 
 var CONFIG = {
     src: {
         name: 'src',
         styleDir: 'src/styles/',
-        scriptDir: 'src/scripts/'
+        scriptDir: 'src/scripts/',
+        imgDir: 'src/images/'
     },
     dist: {
         name: 'dist',
         styleDir: 'dist/styles/',
-        scriptDir: 'dist/scripts/'
+        scriptDir: 'dist/scripts/',
+        imgDir: 'dist/images/'
     }
 };
 
@@ -32,6 +35,13 @@ gulp.task('watch', function () {
     gulp.watch(CONFIG.src.scriptDir + '**/*.js', ['scripts']);
     gulp.watch(CONFIG.src.styleDir + '**/**/*.scss', ['styles']);
     gulp.watch(CONFIG.src.name + '**/*.html', ['html']);
+    gulp.watch(CONFIG.src.imgDir + '**/*.+(jpg|jpeg|png|gif)', ['images']);
+});
+
+gulp.task('images', function() {
+    gulp.src(CONFIG.src.imgDir + '*')
+        .pipe(imagemin())
+        .pipe(gulp.dest(CONFIG.dist.imgDir))
 });
 
 gulp.task('styles', ['vendors-css'], function() {
