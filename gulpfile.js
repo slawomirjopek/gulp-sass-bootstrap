@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
 var inject = require('gulp-inject');
 var wiredep = require('wiredep');
 var del = require('del');
@@ -24,6 +25,9 @@ var CONFIG = {
         styleDir: 'dist/styles/',
         scriptDir: 'dist/scripts/',
         imgDir: 'dist/images/'
+    },
+    autoprefixer: {
+        browsers: ['last 5 versions']
     }
 };
 
@@ -35,7 +39,7 @@ gulp.task('watch', function () {
     gulp.watch(CONFIG.src.scriptDir + '**/*.js', ['scripts']);
     gulp.watch(CONFIG.src.styleDir + '**/**/*.scss', ['styles']);
     gulp.watch(CONFIG.src.name + '**/*.html', ['html']);
-    gulp.watch(CONFIG.src.imgDir + '**/*.+(jpg|jpeg|png|gif)', ['images']);
+    gulp.watch(CONFIG.src.imgDir + '**/*.+(jpg|jpeg|png|gif|svg)', ['images']);
 });
 
 gulp.task('images', function() {
@@ -68,6 +72,7 @@ gulp.task('styles', ['vendors-css'], function() {
         .pipe(inject(globalStyles, injectOptions.global))
         .pipe(inject(appStyles, injectOptions.app))
         .pipe(sass())
+        .pipe(autoprefixer(CONFIG.autoprefixer))
         .pipe(csso())
         .pipe(gulp.dest(CONFIG.dist.styleDir))
 });
@@ -125,7 +130,7 @@ gulp.task('html', function() {
         .pipe(gulp.dest(CONFIG.dist.name))
 });
 
-gulp.task('build', gulpSequence('clean', ['styles', 'scripts'], 'html'));
+gulp.task('build', gulpSequence('clean', ['styles', 'scripts', 'images'], 'html'));
 
 function createImport(path) {
     return '@import "' + path + '";';
