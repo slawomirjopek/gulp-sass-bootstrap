@@ -43,7 +43,7 @@ gulp.task('watch', function () {
 });
 
 gulp.task('images', function() {
-    gulp.src(CONFIG.src.imgDir + '*')
+    gulp.src(CONFIG.src.imgDir + '**/*.*')
         .pipe(imagemin())
         .pipe(gulp.dest(CONFIG.dist.imgDir))
 });
@@ -130,7 +130,12 @@ gulp.task('html', function() {
         .pipe(gulp.dest(CONFIG.dist.name))
 });
 
-gulp.task('build', gulpSequence('clean', ['styles', 'scripts', 'images'], 'html'));
+gulp.task('fonts', function() {
+    return gulp.src('bower_components/font-awesome/fonts/fontawesome-webfont.*')
+        .pipe(gulp.dest('dist/fonts/'));
+});
+
+gulp.task('build', gulpSequence('clean', ['styles', 'scripts', 'images'], 'html', 'fonts'));
 
 function createImport(path) {
     return '@import "' + path + '";';
